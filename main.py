@@ -1,6 +1,8 @@
 from pyray import *
+from typing import Any
 
 from config import GameConfig
+from data import ConfigManager
 
 def main() -> None:
     game_width: int = int(GameConfig.virtual_resolution.x)
@@ -8,10 +10,13 @@ def main() -> None:
     window_width: int = game_width * 4
     window_height: int = game_height * 4
 
+    config: dict[str, Any] = ConfigManager.load()
+
     init_window(window_width, window_height, "Amber Hunter")
     set_window_state(ConfigFlags.FLAG_WINDOW_RESIZABLE)
+    set_window_state(ConfigFlags.FLAG_BORDERLESS_WINDOWED_MODE)
 
-    set_target_fps(60)
+    set_target_fps(config["fps"])
 
     target: RenderTexture = load_render_texture(game_width, game_height)
     set_texture_filter(target.texture, TextureFilter.TEXTURE_FILTER_POINT)

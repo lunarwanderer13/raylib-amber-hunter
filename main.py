@@ -14,7 +14,12 @@ def main() -> None:
 
     init_window(window_width, window_height, "Amber Hunter")
     set_window_state(ConfigFlags.FLAG_WINDOW_RESIZABLE)
-    set_window_state(ConfigFlags.FLAG_BORDERLESS_WINDOWED_MODE)
+
+    if config["fullscreen"]:
+        set_window_state(ConfigFlags.FLAG_FULLSCREEN_MODE)
+
+        if config["borderless"]:
+            set_window_state(ConfigFlags.FLAG_BORDERLESS_WINDOWED_MODE)
 
     set_target_fps(config["fps"])
 

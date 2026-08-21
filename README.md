@@ -5,9 +5,10 @@ A small game about collecting ambers made for educational and entertaining purpo
 ### Dependencies:  
 Python 3.14.5
 ```
-Package   Version
---------- -------
-cffi      2.0.0
-pycparser 3.0
-raylib    6.0.1.0
+Package      Version
+------------ -------
+cffi         2.1.1
+platformdirs 4.11.3
+pycparser    3.0
+raylib       6.0.1.0
 ```

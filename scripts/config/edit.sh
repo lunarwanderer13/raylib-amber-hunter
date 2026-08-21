@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CONFIG="$HOME/.config/AmberHunter/config.json"
+source "$(dirname "$0")/../path.sh"
 
 if [ -f $CONFIG ]; then
     echo "Opened Amber Hunter config."

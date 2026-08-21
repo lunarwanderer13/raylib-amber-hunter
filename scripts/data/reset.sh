@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DATA="$HOME/.local/share/AmberHunter"
+source "$(dirname "$0")/../path.sh"
 
 if [ -f $DATA ]; then
     rm -- "$DATA"

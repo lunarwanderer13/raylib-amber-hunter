@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DATA="$HOME/.local/share/AmberHunter/data.json"
+source "$(dirname "$0")/../path.sh"
 
 if [ -f $DATA ]; then
     echo "Amber Hunter data:"

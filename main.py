@@ -13,6 +13,10 @@ def main() -> None:
     config: dict[str, Any] = ConfigManager.load()
 
     init_window(window_width, window_height, "Amber Hunter")
+    set_window_position(
+        round(get_monitor_width(get_current_monitor()) / 2 - get_screen_width() / 2),
+        round(get_monitor_height(get_current_monitor()) / 2 - get_screen_height() / 2)
+    )
     set_window_state(ConfigFlags.FLAG_WINDOW_RESIZABLE)
 
     if config["fullscreen"]:

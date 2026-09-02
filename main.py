@@ -2,7 +2,8 @@ from pyray import *
 from typing import Any
 
 from config import GameConfig
-from data import ConfigManager
+from data import ConfigManager, DataManager
+from player import Player
 
 def main() -> None:
     game_width: int = int(GameConfig.virtual_resolution.x)
@@ -27,6 +28,9 @@ def main() -> None:
 
     set_target_fps(config["fps"])
 
+    data: dict[str, Any] = DataManager.load()
+    player: Player = Player(data, config["keybinds"])
+
     target: RenderTexture = load_render_texture(game_width, game_height)
     set_texture_filter(target.texture, TextureFilter.TEXTURE_FILTER_POINT)
 
@@ -47,6 +51,9 @@ def main() -> None:
         begin_texture_mode(target)
 
         clear_background(RAYWHITE)
+
+        player.update()
+        player.clamp(Vector2(game_width, game_height))
 
         end_texture_mode()
 

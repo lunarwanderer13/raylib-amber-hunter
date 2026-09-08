@@ -14,6 +14,7 @@ class Player:
         self.position: Vector2 = Vector2(0, 0)
         self.movement: Vector2 = Vector2(0, 0)
         self.movement_speed: int = 50
+        self.run_speed: float = 2.0
         self.is_running: bool = False
         self.is_colliding: bool = False
         self.can_interact: bool = False
@@ -61,8 +62,8 @@ class Player:
             self.movement.y /= length
 
         if self.is_running:
-            self.movement.x *= 1.25
-            self.movement.y *= 1.25
+            self.movement.x *= self.run_speed
+            self.movement.y *= self.run_speed
 
         self.position.x += round(self.movement.x * self.movement_speed * get_frame_time(), 2)
         self.position.y += round(self.movement.y * self.movement_speed * get_frame_time(), 2)
@@ -95,5 +96,3 @@ class Player:
 
         if self.can_move():
             self.move()
-
-        self.draw()

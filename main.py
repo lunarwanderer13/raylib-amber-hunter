@@ -8,14 +8,9 @@ from player import Player
 from scenes import Scene, scenes
 
 def main() -> None:
-    game_width: int = int(GameConfig.virtual_resolution.x)
-    game_height: int = int(GameConfig.virtual_resolution.y)
-    window_width: int = game_width * 4
-    window_height: int = game_height * 4
-
     config: dict[str, Any] = ConfigManager.load()
 
-    init_window(window_width, window_height, "Amber Hunter")
+    init_window(GameConfig.window_width, GameConfig.window_height, "Amber Hunter")
     set_window_position(
         round(get_monitor_width(get_current_monitor()) / 2 - get_screen_width() / 2),
         round(get_monitor_height(get_current_monitor()) / 2 - get_screen_height() / 2)
@@ -34,28 +29,19 @@ def main() -> None:
     data: dict[str, Any] = DataManager.load()
     player: Player = Player(data, config["keybinds"])
     camera: Camera2D = Camera2D(
-        Vector2(game_width / 2, game_height / 2),
-        Vector2(player.position.x + player.size.x / 2, game_height / 2),
+        Vector2(GameConfig.game_width / 2, GameConfig.game_height / 2),
+        Vector2(player.position.x + player.size.x / 2, GameConfig.game_height / 2),
         0.0,
         1.0
     )
 
-    current_scene: Scene = scenes["beach"]
+    current_scene: Scene = scenes["main_menu"]
 
-    target: RenderTexture = load_render_texture(game_width, game_height)
+    target: RenderTexture = load_render_texture(GameConfig.game_width, GameConfig.game_height)
     set_texture_filter(target.texture, TextureFilter.TEXTURE_FILTER_POINT)
 
     while not window_should_close():
-        scale: float = min(
-            get_screen_width() / game_width,
-            get_screen_height() / game_height
-        )
-
-        draw_width: float = game_width * scale
-        draw_height: float = game_height * scale
-
-        offset_x: float = (get_screen_width() - draw_width) / 2
-        offset_y: float = (get_screen_height() - draw_height) / 2
+        GameConfig.calculate()
 
 
 
@@ -69,8 +55,8 @@ def main() -> None:
         camera.target = Vector2(
             clamp(
                 player.position.x + player.size.x / 2,
-                game_width / 2,
-                current_scene.size.x - game_width / 2
+                GameConfig.game_width / 2,
+                current_scene.size.x - GameConfig.game_width / 2
             ),
             current_scene.size.y / 2
         )
@@ -93,8 +79,8 @@ def main() -> None:
 
         draw_texture_pro(
             target.texture,
-            Rectangle(0, 0, game_width, -game_height),
-            Rectangle(offset_x, offset_y, draw_width, draw_height),
+            Rectangle(0, 0, GameConfig.game_width, -GameConfig.game_height),
+            Rectangle(GameConfig.offset_x, GameConfig.offset_y, GameConfig.draw_width, GameConfig.draw_height),
             Vector2(0, 0),
             0,
             WHITE
@@ -102,6 +88,7 @@ def main() -> None:
 
         end_drawing()
 
+    TextureManager.unload()
     close_window()
 
 if __name__ == "__main__":

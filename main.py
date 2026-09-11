@@ -23,6 +23,7 @@ def main() -> None:
         if config["borderless"]:
             set_window_state(ConfigFlags.FLAG_BORDERLESS_WINDOWED_MODE)
 
+    set_exit_key(KeyboardKey.KEY_NULL)
     set_target_fps(config["fps"])
 
     TextureManager.load()

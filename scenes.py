@@ -3,11 +3,13 @@ from math import ceil
 
 from assets import TextureManager
 from config import GameConfig
+from player import Player
 from utils import Timer, getGameMousePosition
 
 class Scene:
     name: str = ""
     size: Vector2 = Vector2(0, 0)
+    player: Player
 
     def getArea(self, axis: str, rect: Rectangle) -> range:
         match(axis):
@@ -17,6 +19,14 @@ class Scene:
                 return range(int(rect.y), int(rect.y + rect.height) + TextureManager.tile_size - 1, TextureManager.tile_size)
             case _:
                 raise ValueError("Argument axis of Scene.getArea only accepts x or y as values.")
+
+    def setCurrentScene(self) -> Scene:
+        global current_scene
+        current_scene = self
+        return current_scene
+
+    def onLoad(self) -> None:
+        ...
 
     def draw(self) -> None:
         ...
@@ -38,10 +48,20 @@ class MainMenu(Scene):
     exit_button_timer: Timer = Timer(4)
     timers: list[Timer] = [start_button_timer, settings_button_timer, credits_button_timer, exit_button_timer]
 
+    def onLoad(self) -> None:
+        self.player.togglePlayer(False)
+
     def draw(self) -> None:
-        for rect, timer in zip(self.rects, self.timers):
+        for index, (rect, timer) in enumerate(zip(self.rects, self.timers)):
             if check_collision_point_rec(getGameMousePosition(), rect):
                 timer.time = max(timer.time - get_frame_time(), 0)
+
+                if is_mouse_button_pressed(MouseButton.MOUSE_BUTTON_LEFT):
+                    match (index + 1):
+                        case 1:
+                            scenes["beach"].setCurrentScene()
+                        case _:
+                            ...
             else:
                 timer.time = min(1 / timer.start_time, timer.time + get_frame_time())
 
@@ -91,6 +111,9 @@ class Beach(Scene):
 
     timer: Timer = Timer(4)
 
+    def onLoad(self) -> None:
+        self.player.togglePlayer(True)
+
     def draw(self) -> None:
         if self.timer.time > 0:
             self.timer.update()
@@ -120,9 +143,11 @@ class Beach(Scene):
             )
 
         if self.timer.time <= 0:
-            self.timer.time = 4
+            self.timer.reset()
 
 scenes: dict[str, Scene] = {
     "main_menu": MainMenu(),
     "beach": Beach()
 }
+
+current_scene: Scene = scenes["main_menu"]

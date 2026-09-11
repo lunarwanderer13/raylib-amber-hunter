@@ -10,7 +10,8 @@ class Player:
         self.bag: list[Loot | Amber] = data["bag"]
         self.keybinds: dict[str, KeyboardKey | int] = keybinds
 
-        self.active: bool = False
+        self.is_active: bool = False
+        self.is_hidden: bool = True
         self.position: Vector2 = Vector2(0, 0)
         self.movement: Vector2 = Vector2(0, 0)
         self.movement_speed: int = 50
@@ -29,9 +30,14 @@ class Player:
             self.size.x, 1
         )
 
-    def can_move(self) -> bool:
+    def togglePlayer(self, is_enabled: bool) -> None:
+        self.is_active = is_enabled
+        self.is_hidden = not is_enabled
+
+    def canMove(self) -> bool:
         return (
-            self.movement_speed > 0
+            self.is_active
+            and self.movement_speed > 0
             and not self.is_colliding
         )
 
@@ -87,6 +93,9 @@ class Player:
         self.collision_rect.y = self.position.y
 
     def draw(self) -> None:
+        if self.is_hidden:
+            return
+
         draw_rectangle_rec(self.rect, BLUE)
         draw_rectangle_rec(self.collision_rect, YELLOW)
         draw_pixel_v(self.position, BLACK)
@@ -94,5 +103,5 @@ class Player:
     def update(self) -> None:
         self.is_running = is_key_down(self.keybinds["run"])
 
-        if self.can_move():
+        if self.canMove():
             self.move()

@@ -5,7 +5,7 @@ from assets import TextureManager
 from config import GameConfig
 from data import ConfigManager, DataManager
 from player import Player
-from scenes import Scene, scenes
+import scenes
 
 def main() -> None:
     config: dict[str, Any] = ConfigManager.load()
@@ -35,8 +35,6 @@ def main() -> None:
         1.0
     )
 
-    current_scene: Scene = scenes["main_menu"]
-
     target: RenderTexture = load_render_texture(GameConfig.game_width, GameConfig.game_height)
     set_texture_filter(target.texture, TextureFilter.TEXTURE_FILTER_POINT)
 
@@ -48,6 +46,10 @@ def main() -> None:
         begin_texture_mode(target)
 
         clear_background(RAYWHITE)
+
+        current_scene: scenes.Scene = scenes.current_scene
+        current_scene.player = player
+        current_scene.onLoad()
 
         player.update()
         player.clamp(current_scene.size)

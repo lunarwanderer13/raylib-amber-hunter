@@ -5,7 +5,7 @@ from assets import TextureManager
 from config import GameConfig
 from data import ConfigManager, DataManager
 from player import Player
-import scenes
+import scenes.scene as scene
 
 def main() -> None:
     config: dict[str, Any] = ConfigManager.load()
@@ -48,7 +48,7 @@ def main() -> None:
 
         clear_background(RAYWHITE)
 
-        current_scene: scenes.Scene = scenes.current_scene
+        current_scene: scene.Scene = scene.current_scene
         current_scene.player = player
         current_scene.onLoad()
 
